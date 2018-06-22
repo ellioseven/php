@@ -1,0 +1,41 @@
+ENV PHP_DEPS_BUILD \
+	libjpeg62-turbo-dev \
+	libpng-dev \
+	libpq-dev
+
+ENV PHP_DEPS_RUN \
+	bzip2 \
+	ca-certificates \
+	git \
+	libjpeg62-turbo \
+	libpng16-16 \
+	libpq5 \
+	mysql-client \
+	openssh-client \
+	rsync \
+	sqlite3 \
+	ssmtp \
+	wget \
+	zip
+
+# Create 'php' user.
+RUN groupadd --gid 1000 php \
+	&& useradd --uid 1000 --gid php --shell /bin/bash --create-home php \
+	&& mkdir -p /home/php/bin \
+	&& mkdir -p /usr/srv/php \
+	&& chown -R php:php /home/php
+
+# Create default web root.
+RUN mkdir -p /usr/srv/php \
+    && echo '<?php phpinfo();' >> /usr/srv/php/index.php \
+		&& chown -R php:php /usr/srv/php
+
+RUN mkdir -p /home/php/.ssh \
+	&& touch /home/php/.ssh/known_hosts \
+	&& chown -R php:php /home/php/.ssh
+
+WORKDIR /home/php/src/docroot
+
+ENV PATH /home/php/bin:$PATH
+ENV PATH /usr/srv/php/vendor/bin:$PATH
+ENV PATH /home/php/.composer/vendor/bin:$PATH

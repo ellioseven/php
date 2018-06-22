@@ -1,0 +1,9 @@
+FROM php:7.1-stretch
+MAINTAINER elliot.mitchum@ellioseven.com.au
+
+{{> partials/core}}
+{{> partials/php}}
+{{> partials/opcache}}
+{{> partials/xdebug}}
+{{> partials/composer}}
+{{> partials/entrypoint}}

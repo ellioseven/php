@@ -1,0 +1,27 @@
+# Build PHP dependencies.
+RUN set -ex \
+	# Add build dependencies. \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		$PHP_DEPS_RUN \
+		$PHP_DEPS_BUILD \
+	&& rm -rf /var/lib/apt/lists/* \
+	# Configure 'gd' PHP extension. \
+	&& docker-php-ext-configure gd \
+		--with-jpeg-dir=/usr \
+		--with-png-dir=/usr \
+	# Build PHP extensions. \
+	&& docker-php-ext-install -j "$(nproc)" \
+		gd \
+		mbstring \
+		opcache \
+		pdo \
+		pdo_mysql \
+		zip \
+	# Remove build depdendencies. \
+	&& apt-get purge -y --auto-remove $PHP_DEPS_BUILD
+
+# Get PHP development configuration.
+ADD https://raw.githubusercontent.com/php/php-src/PHP-$PHP_VERSION/php.ini-development /usr/local/etc/php/php.ini
+RUN echo "sendmail_path = /usr/sbin/sendmail -t -i" >> /usr/local/etc/php/php.ini
+RUN chmod 755 /usr/local/etc/php/php.ini

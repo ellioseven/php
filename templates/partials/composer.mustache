@@ -1,0 +1,10 @@
+# Install composer to 'php' user.
+# .composer.tmp will be merged to .composer on entrypoint.
+RUN chown -R php:php /home/php
+USER php
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+	&& php composer-setup.php --filename=composer --install-dir=/home/php/bin \
+	&& php -r "unlink('composer-setup.php');" \
+	&& composer global require hirak/prestissimo \
+	&& mv /home/php/.composer /home/php/.composer.tmp
+USER root

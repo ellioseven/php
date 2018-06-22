@@ -37,7 +37,7 @@ RUN mkdir -p /home/php/.ssh \
 	&& touch /home/php/.ssh/known_hosts \
 	&& chown -R php:php /home/php/.ssh
 
-WORKDIR /home/php/src/docroot
+WORKDIR /usr/srv/php
 
 ENV PATH /home/php/bin:$PATH
 ENV PATH /usr/srv/php/vendor/bin:$PATH
@@ -59,6 +59,7 @@ RUN set -ex \
 		gd \
 		mbstring \
 		opcache \
+		pcntl \
 		pdo \
 		pdo_mysql \
 		zip \
